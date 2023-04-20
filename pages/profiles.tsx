@@ -2,31 +2,30 @@ import { NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { FC, useCallback } from "react";
+import defaultBlue from "@/public/images/default-blue.png";
+import defaultRed from "@/public/images/default-red.png";
+import defaultSlate from "@/public/images/default-slate.png";
+import defaultGreen from "@/public/images/default-green.png";
 
 import useCurrentUser from "@/hooks/useCurrentUser";
+import Image from "next/image";
 
-const images = [
-  "/images/default-blue.png",
-  "/images/default-red.png",
-  "/images/default-slate.png",
-  "/images/default-green.png",
-];
+const images = [defaultBlue, defaultRed, defaultSlate, defaultGreen];
 
 interface UserCardProps {
   name: string;
 }
 
 const UserCard: FC<UserCardProps> = ({ name }) => {
-  const imgSrc = images[Math.floor(Math.random() * 4)];
-
   return (
     <div className="group flex-row w-44 mx-auto">
       <div className="w-44 h-44 rounded-md flex items-center justify-center border-2 border-transparent group-hover:cursor-pointer group-hover:border-white overflow-hidden">
-        <img
+        <Image
           draggable={false}
-          className="w-max h-max object-contain"
-          src={imgSrc}
+          src={defaultBlue}
           alt=""
+          className="w-max h-max object-contain"
+          priority={true}
         />
       </div>
       <div className="mt-4 text-gray-400 text-2xl text-center group-hover:text-white">
@@ -38,7 +37,7 @@ const UserCard: FC<UserCardProps> = ({ name }) => {
 
 const App = () => {
   const router = useRouter();
-  const { data: currentUser } = useCurrentUser();
+  const { data } = useCurrentUser();
 
   const selectProfile = useCallback(() => {
     router.push("/");
@@ -52,7 +51,7 @@ const App = () => {
         </h1>
         <div className="flex items-center justify-center gap-8 mt-10">
           <div onClick={() => selectProfile()}>
-            <UserCard name={currentUser?.name} />
+            <UserCard name={data?.name} />
           </div>
         </div>
       </div>
